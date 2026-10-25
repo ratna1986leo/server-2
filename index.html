@@ -1,152 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
   <title>Video Preview</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      position: relative;
-      width: 100%;
-      max-width: 720px;
-      margin: auto;
-      padding-top: 20px;
-    }
-
-    video {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-
-    /* Popup Styles */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .popup-box {
-      background: #fff;
-      padding: 24px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      animation: slideUp 0.3s ease-in-out;
-    }
-
-    .popup-box h2 {
-      margin-top: 0;
-      font-size: 20px;
-      color: #333;
-    }
-
-    .popup-box p {
-      font-size: 15px;
-      color: #555;
-      margin: 16px 0;
-    }
-
-    .popup-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .popup-buttons button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.2s;
-    }
-
-    .popup-buttons button:first-child {
-      background: #e0e0e0;
-      color: #333;
-    }
-
-    .popup-buttons button:last-child {
-      background: #ff3c5f;
-      color: #fff;
-    }
-
-    .popup-buttons button:hover {
-      transform: scale(1.05);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+    :root { color-scheme: dark; --bg:#090b12; --panel:#141925; --text:#f4f6fb; --muted:#a7afc0; --accent:#7c5cff; --accent2:#a28cff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; padding:clamp(16px,4vw,40px); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:radial-gradient(ellipse at top,#202344 0%,var(--bg) 55%); }
+    .page { width:min(100%,900px); margin:0 auto; }
+    .header { margin:0 0 22px; text-align:center; }
+    .badge { display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border:1px solid #353957; border-radius:999px; color:#d5d7ff; background:#171a2c; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:14px 0 8px; font-size:clamp(1.6rem,4vw,2.4rem); letter-spacing:-.035em; }
+    .subtitle { margin:0; color:var(--muted); line-height:1.6; }
+    .video-card { overflow:hidden; padding:clamp(10px,2vw,18px); border:1px solid #292f41; border-radius:22px; background:linear-gradient(145deg,#171d2b,#10141e); box-shadow:0 24px 70px #0008; }
+    video { display:block; width:100%; max-height:75vh; aspect-ratio:16/9; object-fit:contain; border-radius:13px; background:#000; }
+    .note { margin:14px 4px 2px; color:var(--muted); font-size:.88rem; line-height:1.5; }
+    .popup-overlay { position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; background:#05060bd9; backdrop-filter:blur(9px); }
+    .popup-overlay.show { display:flex; animation:fadeIn .24s ease-out both; }
+    .popup-box { width:min(100%,420px); padding:clamp(22px,5vw,32px); border:1px solid #363c53; border-radius:22px; background:linear-gradient(145deg,#1b2130,#111520); box-shadow:0 28px 90px #0009; text-align:center; animation:rise .3s cubic-bezier(.2,.8,.2,1) both; }
+    .popup-icon { display:grid; place-items:center; width:54px; height:54px; margin:0 auto 15px; border-radius:17px; background:#2a2451; color:#c7baff; font-size:1.5rem; }
+    .popup-box h2 { margin:0 0 10px; font-size:1.45rem; }
+    .popup-box p { margin:0 0 22px; color:var(--muted); line-height:1.65; }
+    .popup-buttons { display:flex; gap:10px; }
+    button { flex:1; min-height:46px; padding:12px 16px; border:0; border-radius:12px; font:inherit; font-weight:700; cursor:pointer; transition:transform .18s ease,filter .18s ease; }
+    button:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    button:focus-visible { outline:3px solid #c7baff; outline-offset:3px; }
+    .btn-secondary { color:#e2e6f0; background:#2a3040; }
+    .btn-primary { color:white; background:linear-gradient(135deg,var(--accent),#6545e9); box-shadow:0 8px 22px #7659ff40; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes rise { from { opacity:0; transform:translateY(16px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+    @media (max-width:480px) { body { padding:16px 12px 26px; } .video-card { border-radius:16px; } .popup-buttons { flex-direction:column-reverse; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }
   </style>
+  <!-- Iklan: memuat skrip pengelola iklan pihak ketiga yang diberikan. -->
+  <script data-cfasync="false" async src="https://js.wpadmngr.com/static/adManager.js"></script>
 </head>
 <body>
+  <main class="page">
+    <header class="header">
+      <span class="badge">▶ Video preview</span>
+      <h1>Video untuk ditonton</h1>
+      <p class="subtitle">Gunakan kontrol pemutar untuk memulai atau menjeda video.</p>
+    </header>
+    <section class="video-card" aria-label="Pemutar video">
+      <video id="video" controls playsinline preload="metadata">
+        <source src="https://ik.imagekit.io/yhhmgwam7/tutorial%20ganti%20baju%20di%20kamar%20yg%20ada%20CCTVnya%20@mbahmaryonoreborn.mp4?updatedAt=1784049490088" type="video/mp4">
+        Browser kamu tidak mendukung pemutaran video.
+      </video>
+      <p class="note">Pastikan konten ini dibagikan dengan izin orang yang terekam.</p>
+    </section>
+  </main>
 
-<div class="container">
-  <video id="video" autoplay muted controls>
-    <source src="https://ik.imagekit.io/yhhmgwam7/tutorial%20ganti%20baju%20di%20kamar%20yg%20ada%20CCTVnya%20@mbahmaryonoreborn.mp4?updatedAt=1784049490088" type="video/mp4">
-    Browser kamu tidak mendukung video.
-  </video>
-</div>
-
-<!-- Popup Overlay -->
-<div id="popup-overlay" class="popup-overlay">
-  <div class="popup-box">
-    <h2>Konfirmasi Usia</h2>
-    <p>Video ini mengandung konten dewasa. Apakah Anda berusia di atas 18 tahun dan ingin melanjutkan?</p>
-    <div class="popup-buttons">
-      <button onclick="closePopup()">BATAL</button>
-      <!-- link iklannmu dibawah ini -->
-      <button onclick="window.location.href='https://thrillingdeepcutlery.com/rzd4iam3x4?key=48cbca15f3aff20ed5c36ba603ced8e2'"
->LANJUT</button>
-
+  <div id="popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title" aria-describedby="popup-description">
+    <div class="popup-box">
+      <div class="popup-icon" aria-hidden="true">18+</div>
+      <h2 id="popup-title">Konfirmasi usia</h2>
+      <p id="popup-description">Apakah kamu berusia 18 tahun atau lebih dan ingin melanjutkan menonton?</p>
+      <div class="popup-buttons">
+        <button class="btn-secondary" id="cancel-button" type="button">BATAL</button>
+        <button class="btn-primary" id="continue-button" type="button">LANJUT</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  function closePopup() {
-    document.getElementById('popup-overlay').style.display = 'none';
-  }
+  <script>
+    (() => {
+      const video = document.getElementById('video');
+      const popup = document.getElementById('popup-overlay');
+      const cancel = document.getElementById('cancel-button');
+      const proceed = document.getElementById('continue-button');
+      let popupShown = false;
+      let playbackTimer = null;
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const video = document.getElementById("video");
-    const popup = document.getElementById("popup-overlay");
+      function closePopup() {
+        popup.classList.remove('show');
+        popup.setAttribute('aria-hidden', 'true');
+      }
 
-    video.addEventListener("play", function () {
-      setTimeout(function () {
+      function showPopup() {
+        if (popupShown) return;
+        popupShown = true;
         video.pause();
-        popup.style.display = "flex";
-      }, 5000); // 5 detik
-    });
-  });
-</script>
+        popup.setAttribute('aria-hidden', 'false');
+        popup.classList.add('show');
+        cancel.focus();
+      }
 
+      video.addEventListener('play', () => {
+        if (popupShown || playbackTimer) return;
+        playbackTimer = window.setTimeout(showPopup, 5000);
+      });
+
+      video.addEventListener('pause', () => {
+        if (playbackTimer && !popupShown) {
+          window.clearTimeout(playbackTimer);
+          playbackTimer = null;
+        }
+      });
+
+      cancel.addEventListener('click', () => {
+        closePopup();
+        video.pause();
+      });
+
+      proceed.addEventListener('click', () => {
+        closePopup();
+        video.play().catch(() => {
+          // Pada browser tertentu, pengguna perlu menekan tombol play sendiri.
+        });
+      });
+
+      popup.addEventListener('click', event => {
+        if (event.target === popup) closePopup();
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && popup.classList.contains('show')) closePopup();
+      });
+    })();
+  </script>
 </body>
 </html>
