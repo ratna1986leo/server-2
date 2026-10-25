@@ -17,6 +17,8 @@
     .video-card { overflow:hidden; padding:clamp(10px,2vw,18px); border:1px solid #292f41; border-radius:22px; background:linear-gradient(145deg,#171d2b,#10141e); box-shadow:0 24px 70px #0008; }
     video { display:block; width:100%; max-height:75vh; aspect-ratio:16/9; object-fit:contain; border-radius:13px; background:#000; }
     .note { margin:14px 4px 2px; color:var(--muted); font-size:.88rem; line-height:1.5; }
+    .ad-card { margin-top:18px; padding:14px; border:1px solid #292f41; border-radius:16px; background:#111520; text-align:center; overflow:hidden; }
+    .ad-label { margin:0 0 10px; color:var(--muted); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
     .popup-overlay { position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; background:#05060bd9; backdrop-filter:blur(9px); }
     .popup-overlay.show { display:flex; animation:fadeIn .24s ease-out both; }
     .popup-box { width:min(100%,420px); padding:clamp(22px,5vw,32px); border:1px solid #363c53; border-radius:22px; background:linear-gradient(145deg,#1b2130,#111520); box-shadow:0 28px 90px #0009; text-align:center; animation:rise .3s cubic-bezier(.2,.8,.2,1) both; }
@@ -35,7 +37,7 @@
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important; } }
   </style>
   <!-- Iklan: memuat skrip pengelola iklan pihak ketiga yang diberikan. -->
-  <script data-cfasync="false" async src="https://js.wpadmngr.com/static/adManager.js"></script>
+  <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="469743"></script>
 </head>
 <body>
   <main class="page">
@@ -50,6 +52,11 @@
         Browser kamu tidak mendukung pemutaran video.
       </video>
       <p class="note">Pastikan konten ini dibagikan dengan izin orang yang terekam.</p>
+    </section>
+
+    <section class="ad-card" aria-label="Iklan banner">
+      <p class="ad-label">Iklan</p>
+      <div data-banner-id="1505339"></div>
     </section>
   </main>
 
