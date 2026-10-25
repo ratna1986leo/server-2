@@ -71,33 +71,19 @@
       const popup = document.getElementById('popup-overlay');
       const cancel = document.getElementById('cancel-button');
       const proceed = document.getElementById('continue-button');
-      let popupShown = false;
-      let playbackTimer = null;
-
       function closePopup() {
         popup.classList.remove('show');
         popup.setAttribute('aria-hidden', 'true');
       }
 
-      function showPopup() {
-        if (popupShown) return;
-        popupShown = true;
-        video.pause();
-        popup.setAttribute('aria-hidden', 'false');
-        popup.classList.add('show');
-        cancel.focus();
-      }
-
+      // Perilaku timer dipertahankan: setiap event play memulai timer 5 detik.
       video.addEventListener('play', () => {
-        if (popupShown || playbackTimer) return;
-        playbackTimer = window.setTimeout(showPopup, 5000);
-      });
-
-      video.addEventListener('pause', () => {
-        if (playbackTimer && !popupShown) {
-          window.clearTimeout(playbackTimer);
-          playbackTimer = null;
-        }
+        window.setTimeout(() => {
+          video.pause();
+          popup.setAttribute('aria-hidden', 'false');
+          popup.classList.add('show');
+          cancel.focus();
+        }, 5000);
       });
 
       cancel.addEventListener('click', () => {
